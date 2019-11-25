@@ -1,0 +1,5 @@
+<?php
+
+class ConstructorRewrites1 {
+public function __construct($foo = null, $bar = null) {}
+}

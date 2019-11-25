@@ -1,0 +1,25 @@
+{
+    "name": "sunnysideup/huringa",
+    "type": "library",
+    "description": "Runs code upgrades and transformations",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Nicolaas Francken",
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
+        }
+    ],
+    "require": {
+        "nikic/php-parser": "^4.0"
+    },
+    "autoload": {
+      "psr-4": {
+        "Sunnysideup\\Huringa\\": "src/",
+        "Sunnysideup\\Huringa\\Tests\\": "tests/"
+      }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    }
+}
