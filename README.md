@@ -12,7 +12,7 @@ composer require sunnysideup/huringa
 
 Run the following script via the terminal. The tool recursively checks folders.
 
-./vendor/sunnysideup/huringa/huringa.php ./app [--dry-run] [--help]
+./vendor/sunnysideup/huringa/huringa.php ./app [--dry-run] [--help] [--disable-constructor-rewrite] [--disable-class-file-create]
 
 ## Supported operations
 

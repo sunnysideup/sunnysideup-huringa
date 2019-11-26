@@ -9,10 +9,11 @@ class ParseClass
 	/**
 	 * @param string $filePath
 	 * @param bool $dryRun
+     * @param string[] $options
      *
      * @return array
 	 */
-	public function parseCode($filePath, $dryRun = true)
+	public function parseCode($filePath, $dryRun = true, $options = [])
 	{
 		$code = file_get_contents($filePath);
 
@@ -54,15 +55,26 @@ class ParseClass
 			$targetPath = dirname($filePath);
 
 			array_walk($classNodes,
-				function ($node, $name) use (&$files, $printer, $targetPath, $originalStaments, $originalTokens) {
-					$path = "{$targetPath}/{$name}.php";
+                function ($node, $name) use (&$files, $printer, $targetPath, $originalStaments, $originalTokens,
+                    $options, $filePath) {
                     $code = $printer->printFormatPreserving([$node], $originalStaments, $originalTokens) . "\n";
 
                     // transform any function ClassName[\(| ] to a PHP7 compatible function __construct(
-                    $replace = sprintf("/function %s[\\(|\s*\\(]+/", $name);
-                    $code = preg_replace($replace, 'function __construct(', $code);
+                    if (!isset($options['constructor-rewrite']) || $options['constructor-rewrite']) {
+                        $replace = sprintf("/function %s[\\(|\s*\\(]+/", $name);
+                        $code = preg_replace($replace, 'function __construct(', $code);
+                    }
 
-					$files[$path] = $code;
+                    if (!isset($options['class-file-create']) || $options['class-file-create']) {
+					    $path = "{$targetPath}/{$name}.php";
+                        $files[$path] = $code;
+                    } else {
+                        if (!isset($files[$filePath])) {
+                            $files[$filePath] = '';
+                        }
+
+                        $files[$filePath] .= $code;
+                    }
 				});
 
             /*/ Actually write the files /*/

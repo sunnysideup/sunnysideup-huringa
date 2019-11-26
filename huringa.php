@@ -32,12 +32,33 @@ TXT;
     /*/ Create variables from the command-line parameters /*/
     $dryRun = false;
 
-	$parameters = array_map(function ($parameter) use (&$dryRun) {
+    $options = [
+        'class-file-create' => true,
+        'constructor-rewrite' => true
+    ];
+
+	$parameters = array_map(function ($parameter) use (&$dryRun, &$options) {
         $isNamedParam = strpos($parameter, '--') === 0;
-        if ($isNamedParam && $parameter === '--dry-run') {
-            $dryRun = true;
+
+        if ($isNamedParam) {
+            if ($parameter === '--dry-run') {
+                $dryRun = true;
+            }
+
+            if ($parameter === '--disable-class-file-create') {
+                $options = [
+                    'class-file-create' => false
+                ];
+            }
+
+            if ($parameter === '--disable-constructor-rewrite') {
+                $options = [
+                    'constructor-rewrite' => false
+                ];
+            }
         }
-        return $isNamedParam?null:$parameter;
+
+        return $isNamedParam ? null : $parameter;
 	}, $parameters);
 
     $filePath = realpath(array_shift($parameters));
@@ -47,11 +68,11 @@ TXT;
     } else {
         echo "Indexing ". $filePath . PHP_EOL;
 
-		parseFolder($filePath, $dryRun);
+		parseFolder($filePath, $dryRun, $options);
     }
 }
 
-function parseFolder($dir, $dryRun) {
+function parseFolder($dir, $dryRun, $options) {
     $parser = new ParseClass();
 
 	foreach (scandir($dir) as $child) {
@@ -63,14 +84,14 @@ function parseFolder($dir, $dryRun) {
 
 		if (is_dir($path)) {
             echo "- Indexing ". $child . PHP_EOL;
-			parseFolder($path, $dryRun);
+			parseFolder($path, $dryRun, $options);
 		} elseif (is_file($path)) {
             if (strpos($child, '.php') === false) {
                 continue;
             }
 
             echo "Parsing ". $child . PHP_EOL;
-			$parser->parseCode($path, $dryRun);
+			$parser->parseCode($path, $dryRun, $options);
 		} else {
 
         }
