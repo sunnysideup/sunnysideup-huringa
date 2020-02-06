@@ -10,7 +10,7 @@ set_error_handler(function ($severity, $message, $file, $line) {
 $parameters = $argv;
 $command = basename(array_shift($parameters));
 
-if (count($parameters) < 1 || in_array('--help', $parameters)) {
+if (count($parameters) < 1 || in_array('--help', $parameters, true)) {
     echo <<<TXT
 Usage:
 
@@ -25,16 +25,15 @@ Example:
 	{$command} --dry-run 'app/src'"
 TXT;
 } else {
-
     /*/ Create variables from the command-line parameters /*/
     $dryRun = false;
 
     $options = [
         'class-file-create' => true,
-        'constructor-rewrite' => true
+        'constructor-rewrite' => true,
     ];
 
-	$parameters = array_map(function ($parameter) use (&$dryRun, &$options) {
+    $parameters = array_map(function ($parameter) use (&$dryRun, &$options) {
         $isNamedParam = strpos($parameter, '--') === 0;
 
         if ($isNamedParam) {
@@ -44,54 +43,51 @@ TXT;
 
             if ($parameter === '--disable-class-file-create') {
                 $options = [
-                    'class-file-create' => false
+                    'class-file-create' => false,
                 ];
             }
 
             if ($parameter === '--disable-constructor-rewrite') {
                 $options = [
-                    'constructor-rewrite' => false
+                    'constructor-rewrite' => false,
                 ];
             }
         }
 
         return $isNamedParam ? null : $parameter;
-	}, $parameters);
+    }, $parameters);
 
     $filePath = realpath(array_shift($parameters));
 
-    if (!is_dir($filePath)) {
+    if (! is_dir($filePath)) {
         throw new \InvalidArgumentException("Could not find directory at given path {$filePath}");
-    } else {
-        echo "Indexing ". $filePath . PHP_EOL;
-
-		parseFolder($filePath, $dryRun, $options);
     }
+    echo 'Indexing ' . $filePath . PHP_EOL;
+
+    parseFolder($filePath, $dryRun, $options);
 }
 
-function parseFolder($dir, $dryRun, $options) {
+function parseFolder($dir, $dryRun, $options)
+{
     $parser = new ParseClass();
 
-	foreach (scandir($dir) as $child) {
-		if ($child == '.' || $child == '..') {
-			continue;
+    foreach (scandir($dir) as $child) {
+        if ($child === '.' || $child === '..') {
+            continue;
         }
 
-        $path = $dir . '/'. $child;
+        $path = $dir . '/' . $child;
 
-		if (is_dir($path)) {
-            echo "- Indexing ". $child . PHP_EOL;
-			parseFolder($path, $dryRun, $options);
-		} elseif (is_file($path)) {
+        if (is_dir($path)) {
+            echo '- Indexing ' . $child . PHP_EOL;
+            parseFolder($path, $dryRun, $options);
+        } elseif (is_file($path)) {
             if (strpos($child, '.php') === false) {
                 continue;
             }
 
-            echo "Parsing ". $child . PHP_EOL;
-			$parser->parseCode($path, $dryRun, $options);
-		} else {
-
+            echo 'Parsing ' . $child . PHP_EOL;
+            $parser->parseCode($path, $dryRun, $options);
         }
-	}
-
+    }
 }

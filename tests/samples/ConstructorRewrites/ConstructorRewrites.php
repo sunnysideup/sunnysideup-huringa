@@ -1,6 +1,12 @@
 <?php
 
-class ConstructorRewrites {
-function ConstructorRewrites() {}
-function MyOtherFunction() {}
+class ConstructorRewrites
+{
+    public function ConstructorRewrites()
+    {
+    }
+
+    public function MyOtherFunction()
+    {
+    }
 }

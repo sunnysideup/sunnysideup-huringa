@@ -1,9 +1,9 @@
 <?php
 
-class Nested {
-
+class Nested
+{
 }
 
-class Nested_Controller {
-
+class Nested_Controller
+{
 }

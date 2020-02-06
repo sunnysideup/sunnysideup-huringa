@@ -7,14 +7,13 @@ use Sunnysideup\Huringa\ParseClass;
 
 final class UnitTests extends TestCase
 {
-
     public function testClassSplit()
     {
         $parser = new ParseClass();
 
-		foreach (glob(__DIR__ . '/samples/ClassSplit/*.php') as $sample) {
+        foreach (glob(__DIR__ . '/samples/ClassSplit/*.php') as $sample) {
             $parsed = $parser->parseCode($sample, null);
-            $this->assertEquals(2, count($parsed), 'Parser generates 2 files');
+            $this->assertSame(2, count($parsed), 'Parser generates 2 files');
         }
     }
 
@@ -22,14 +21,14 @@ final class UnitTests extends TestCase
     {
         $parser = new ParseClass();
 
-		foreach (glob(__DIR__ . '/samples/ConstructorRewrites/*.php') as $sample) {
+        foreach (glob(__DIR__ . '/samples/ConstructorRewrites/*.php') as $sample) {
             $parsed = $parser->parseCode($sample, null);
-            $this->assertEquals(1, count($parsed), 'Parser generates a file');
+            $this->assertSame(1, count($parsed), 'Parser generates a file');
 
-            $this->assertEquals(
+            $this->assertSame(
                 $parsed[$sample],
                 file_get_contents(str_replace('.php', '.expected', $sample)),
-                "$sample matches the output file."
+                "${sample} matches the output file."
             );
         }
     }

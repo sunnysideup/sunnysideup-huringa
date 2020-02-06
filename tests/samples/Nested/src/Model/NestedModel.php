@@ -1,9 +1,9 @@
 <?php
 
-class NestedModel {
-
+class NestedModel
+{
 }
 
-class NestedModel_Related {
-
+class NestedModel_Related
+{
 }
