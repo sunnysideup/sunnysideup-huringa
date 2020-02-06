@@ -3,8 +3,6 @@
 
 namespace Sunnysideup\Huringa;
 
-require_once dirname(__FILE__) .'/vendor/autoload.php';
-
 set_error_handler(function ($severity, $message, $file, $line) {
     throw new \ErrorException($message, 0, $severity, $file, $line);
 });
