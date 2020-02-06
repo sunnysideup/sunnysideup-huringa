@@ -25,7 +25,6 @@ Example:
 	{$command} --dry-run 'app/src'"
 TXT;
 } else {
-	require __DIR__.'/vendor/autoload.php';
 
     /*/ Create variables from the command-line parameters /*/
     $dryRun = false;
