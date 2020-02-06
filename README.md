@@ -11,8 +11,9 @@ composer require sunnysideup/huringa
 ## Running
 
 Run the following script via the terminal. The tool recursively checks folders.
-
+```shell
 ./vendor/sunnysideup/huringa/huringa.php ./app [--dry-run] [--help] [--disable-constructor-rewrite] [--disable-class-file-create]
+```
 
 ## Supported operations
 
