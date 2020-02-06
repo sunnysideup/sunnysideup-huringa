@@ -1,9 +1,14 @@
 #!/usr/bin/php
 <?php
 
-require_once('../src/ClassVisitor.php');
-require_once('../src/FolderVisitor.php');
-require_once('../src/ParseClass.php');
+namespace Sunnysideup\Huringa;
+
+$dir = dirname(__DIR__);
+require_once  $dir .'/../../autoload.php';
+require_once  $dir.'/src/ClassVisitor.php';
+require_once  $dir.'/src/FolderVisitor.php';
+require_once  $dir.'/src/ParseClass.php';
+
 
 set_error_handler(function ($severity, $message, $file, $line) {
     throw new \ErrorException($message, 0, $severity, $file, $line);
